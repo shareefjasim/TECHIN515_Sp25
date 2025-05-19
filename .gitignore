@@ -1,7 +1,7 @@
 # ignore all old lab folders
 lab1/
 lab2/
-lab4/
+lab3/
 lab5/
 
 # ignore Python venvs
