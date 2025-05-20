@@ -114,7 +114,18 @@ Please follow the steps below to enable your magic wand to talk to the server. A
    }
     ```
 
+    The ESP32 client (your wand) uses this function to communicate recognized gestures to the central server. This function is a key part of the duel system, as it allows each wand to report its detected spell (gesture) and confidence score for each round. Specifically, 
+    - This function constructs a JSON payload with the student ID, gesture, and confidence. 
+    - It then sends this data via an HTTP POST request to the server’s `/predict` endpoint.
+    - Prints the server’s response (or any error) to the Serial Monitor for debugging.
+
+    This function enables real-time communication between the wand and the server, allowing the server to process duel logic, update health/mana, and display results on the web app.
+    
+    Without this function, the server would not know which gestures were performed or their confidence, and the duel could not proceed.
+
 6. Upload the sketch to your magic wand.
+
+**Motivating Discussion**: What are the pros and cons for sending raw data to server vs sending prediction and confidence to server?
 
 ## Duel Rules
 
