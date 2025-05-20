@@ -33,18 +33,19 @@ This directory contains tools for capturing accelerometer data from an ESP32 wit
 
 1. Install Python 3.6 or newer
 2. Install the required Python package:
+   
    ```
    pip install -r requirements.txt
    ```
 
 ## Usage
 
-### Automatic Data Collection (Recommended)
+### Data Collection
 
 1. Connect your ESP32 to your computer
 2. Run the Python script:
-   ```
-   python process_gesture_data.py --gesture "W" --person "your_name"
+   ```bash
+   pytho3 process_gesture_data.py --gesture "W" --person "your_name"
    ```
    
 3. The script will:
@@ -62,8 +63,8 @@ This directory contains tools for capturing accelerometer data from an ESP32 wit
 
 ### Command Line Options
 
-```
-python process_gesture_data.py [options]
+```bash
+python3 process_gesture_data.py [options]
 
 Options:
   --port PORT       Serial port to use (default: auto-detect)
@@ -73,18 +74,11 @@ Options:
   --output DIR      Output directory (default: "data")
 ```
 
-### Manual Data Collection (Alternative)
-
-If you prefer to collect data manually:
-
-1. Open the Arduino Serial Monitor at 115200 baud
-2. Send 'o' to start capturing
-3. The ESP32 will record for 1 second and stop automatically
-4. Copy the data from the Serial Monitor and save it to a file
-
 ## Data Format
 
-The CSV files contain three columns:
+The CSV files contain four columns:
+
+- Timestamp
 - x: X-axis acceleration (in m/s²)
 - y: Y-axis acceleration (in m/s²)
 - z: Z-axis acceleration (in m/s²)

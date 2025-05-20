@@ -5,7 +5,7 @@ from micromlgen import port
 import pandas as pd
 
 # Load dataset
-df = pd.read_csv("Hogwarts_Sorting_Dataset.csv")
+df = pd.read_csv("Sorting_Dataset.csv")
 
 # Prepare dataset
 X = df.drop(columns=["House"])  # Features

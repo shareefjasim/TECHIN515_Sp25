@@ -99,6 +99,7 @@ void showQuestion() {
 }
 
 // Function to check button presses and record response
+// Your should complete this function to handle button presses
 void checkButtons() {
     bool buttonPressed = false;
 
