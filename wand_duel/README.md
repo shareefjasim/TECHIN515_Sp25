@@ -39,7 +39,7 @@ Please follow the steps below to enable your magic wand to talk to the server. A
     const char* ssid = "UW MPSK";
     const char* password = ; // use your password here
     // Server details 
-    const char* serverUrl = ; // Fill in with server URL
+    const char* serverUrl = "http://192.168.1.159:8080/predict"; // Fill in with server URL; Please keep /predict
 
     // Student identifier - set this to your UWNetID
     const char* studentId = "REPLACE_WITH_UWNetID";
