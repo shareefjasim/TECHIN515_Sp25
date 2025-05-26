@@ -16,26 +16,6 @@ By completing this lab, students will:
 - Deploy model as a web app
 - Understand cloud-edge offloading
 
-## Project Structure
-
-```
-.
-├── ESP32_to_cloud/             # ESP32 Arduino code
-│   └── ESP32_to_cloud.ino      # Main ESP32 sketch
-├── trainer_scripts             # Scripts
-    ├── train.ipynb                 # Model training script
-    ├── model_register.ipynb        # Model register script
-├── wand-app/                   # Web app for model deployment
-    ├── wand_model.h5               # trained model
-    ├── app.py                      # Script of web app
-    ├── requirements.txt            # Dependencies required by web app
-└── data/                       # Training data directory
-    ├── O/                           # O-shape gesture samples
-    ├── V/                           # V-shape gesture samples
-    ├── some_class/                  # Some other class gesture samples
-    └── some_class/                  # Some other gesture samples
-```
-
 ## Hardware Requirements
 
 - Your magic wand from Lab 4
@@ -228,6 +208,25 @@ Based on the ESP32 sketch used during wand duel, you should modify it so that yo
 
 ## Deliverables
 
-1. GitHub link to your project with detailed README
+1. GitHub link to your project with detailed README. An example of project structure for your GitHub is given below:
+
+```
+.
+├── ESP32_to_cloud/             # ESP32 Arduino code
+│   └── ESP32_to_cloud.ino      # Main ESP32 sketch
+├── trainer_scripts             # Scripts
+    ├── train.ipynb                 # Model training script
+    ├── model_register.ipynb        # Model register script
+├── app/                        # Web app for model deployment
+    ├── wand_model.h5               # trained model
+    ├── app.py                      # Script of web app
+    ├── requirements.txt            # Dependencies required by web app
+└── data/                       # Training data directory
+    ├── O/                           # O-shape gesture samples
+    ├── V/                           # V-shape gesture samples
+    ├── Z/                           # Z-shape gesture samples
+    └── some_class/                  # Some other gesture samples
+```
+
 2. Pictures of serial monitor
 3. Report of all discussion questions
