@@ -100,7 +100,7 @@ In the following, we will create a compute instance.
 
 <img src="assets/data.png" width="800">
 
-3. Copy the provided code in `model_register.ipynb` to a new Jupyter Notebook in Azure. Use *Python3.10-SDK v2* as the kernel to run the code.
+3. **You can skip this step if you do not plan to host your ML model on Azure**. Copy the provided code in `model_register.ipynb` to a new Jupyter Notebook in Azure. Use *Python3.10-SDK v2* as the kernel to run the code.
    - Note that you need to configure the following code block in the 3rd cell accordingly:
 
 ```py
