@@ -30,6 +30,7 @@ By completing this lab, students will:
 - ESP32 development board
 - MPU6050 sensor
 - LED (Check with Prototyping Lab for options of LED)
+- A button
 - Jumper wires for connections
 - Breadboard for quick prototyping
 - Battery and enclosure for creating your wand
@@ -186,7 +187,7 @@ Prediction: [gesture_name] (confidence_percentage%)
    - For each gesture, collect at least 20 samples. Ensure good quality data by performing the gesture consistently.
    - Save all data in the `data` directory with clear naming conventions.
 
-   **Note**: You are allowed to share your recorded data with others. However, you need to collect your own data.
+   **Note**: You are allowed to share your recorded data with others. However, you need to collect your own data. Make sure your sensor placements are aligned with others when requesting data.
 
 2. **Discussion**: Why should you use training data collected by multiple students rather than using your own collected data only? Think about the **effectiveness** and **reliability** of your wand.
 
@@ -233,8 +234,9 @@ Prediction: [gesture_name] (confidence_percentage%)
 1. Deploy the model to your ESP32 and use `wand.ino` to test its performance with real-time gestures. **Note**: You need to rename header file (Line 18) accordingly.
 2. Repeat your testing for a few times, and use appropriate metrics to document your wand's performance.
 3. Modify the provided `wand.ino` code: Implement a button-triggered inference rather than typing 'o' in seriel monitor: ESP32 predicts the gesture once the button is pressed.
-4. Test your code to ensure your wand functions.
-5. Create a demo video showing your wand.
+4. Add LEDs to your board. Light up LED with different colors based on prediction results.
+5. Test your code to ensure your wand functions.
+6. Create a demo video showing your wand.
 
 ### Part 4: Battery and Enclosure
 
@@ -244,6 +246,8 @@ The prototyping lab has pre-built a board with battery, MCU, switch, and sensor 
 2. Use appropriate enclosure for your wand.
 
 ![Image of Pre-Built Board](assets/board.png)
+
+**Note**: When designing your enclosure, please leave the port accessible in case you need to modify your code in the future.
 
 ## Deliverables
 

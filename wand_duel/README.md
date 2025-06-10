@@ -33,7 +33,7 @@ Please follow the steps below to enable your magic wand to talk to the server. A
 
 2. Find our the MAC address of your ESP32. You can either follow the [tutorial](https://randomnerdtutorials.com/get-change-esp32-esp8266-mac-address-arduino/#:~:text=rate%20of%20115200.-,Press%20the%20on%2Dboard%20RESET%20or%20EN%20button.,printed%20in%20the%20Serial%20Monitor.) here or by reading the seriel monitor of Arduino IDE after uploading your code to dev board.
 
-3. Register your ESP32 with UW MPSK and add the following code into your magic wand sketch:
+3. Register your ESP32 with UW MPSK and add the following code into your magic wand sketch. Please **replace variable values with your information**.
     ```cpp
     // WiFi credentials 
     const char* ssid = "UW MPSK";
@@ -123,7 +123,8 @@ Please follow the steps below to enable your magic wand to talk to the server. A
     
     Without this function, the server would not know which gestures were performed or their confidence, and the duel could not proceed.
 
-6. Upload the sketch to your magic wand.
+6. Call `sendGestureToServer` in function `print_inference_result`. See line 246 of the example sketch. Please replace parameters given to function with your own ones.
+7. Upload the sketch to your magic wand.
 
 **Motivating Discussion**: What are the pros and cons for sending raw data to server vs sending prediction and confidence to server?
 

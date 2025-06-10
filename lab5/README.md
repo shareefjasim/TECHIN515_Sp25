@@ -3,6 +3,7 @@
 This project builds upon lab 4. We will implement an edge-cloud offloading strategy, which performs inference or computation locally on ESP32, and offloads it to the cloud (Microsoft Azure) under certain conditions.
 
 The outline of this lab is as follows:
+
 - Train and host a model in Azure
 - Deploy the model endpoint as a web app
 - Configure magic wand to offload to cloud when uncertain
@@ -10,29 +11,10 @@ The outline of this lab is as follows:
 ## Learning Objectives
 
 By completing this lab, students will:
+
 - Be capable of training and hosting models in Azure
 - Deploy model as a web app
 - Understand cloud-edge offloading
-
-## Project Structure
-
-```
-.
-├── ESP32_to_cloud/             # ESP32 Arduino code
-│   └── ESP32_to_cloud.ino      # Main ESP32 sketch
-├── trainer_scripts             # Scripts
-    ├── train.ipynb                 # Model training script
-    ├── model_register.ipynb        # Model register script
-├── wand-app/                   # Web app for model deployment
-    ├── wand_model.h5               # trained model
-    ├── app.py                      # Script of web app
-    ├── requirements.txt            # Dependencies required by web app
-└── data/                       # Training data directory
-    ├── O/                           # O-shape gesture samples
-    ├── V/                           # V-shape gesture samples
-    ├── some_class/                  # Some other class gesture samples
-    └── some_class/                  # Some other gesture samples
-```
 
 ## Hardware Requirements
 
@@ -89,7 +71,7 @@ By completing this lab, students will:
 There are two types of compute in AzureML: Compute instance and compute cluster. The former is used for development and the latter is used for scalable training jobs.
 In the following, we will create a compute instance.
 
-1. Go to your ML workspace and click on `Compute` in the left sidebar.
+1. Go to your ML workspace, launch ML studio, and click on `Compute` in the left sidebar.
 
 <img src="assets/compute.png" width="200">
 
@@ -99,7 +81,7 @@ In the following, we will create a compute instance.
 
 ### 4. Microsoft Azure: Host Data
 
-1. Locate the training data in your laptop. We will host the data in Azure Blob. Note that as the cloud has higher computing performance and more storage, you can get merge your training data with that collected by other students to improve your model performance.
+1. Locate the training data in your laptop. We will host the data in Azure Blob. Note that as the cloud has higher computing performance and more storage, you can merge your training data with that collected by other students to improve your model performance.
 2. Go to AzureML and navigate to Data tab. Click `+Create`.
 3. Name you data asset along with a brief description. Choose `Folder (uri_folder)` as type. Click `Next`.
 4. Choose From local files option, and upload your training dataset. Click `Next`.
@@ -109,16 +91,19 @@ In the following, we will create a compute instance.
 ### 5. Microsoft Azure: Model Training and Register
 
 1. In the Compute tab, click on JupyterLab.
-2. Copy the following code cell to the Jupyter Notebook.
-3. Copy the provided code in `train.ipynb` to the Jupyter Notebook in Azure. Use *Python3.8-AzureML* as the kernel to run the code. Once the cell completes running, you should see a `h5` file being created.
-   - Note that you need to configure the path to training dataset. To find the correct path, click on Data tab on the left sidebar, and then the dataset you created in Blobstore. Click on View in datastores brows to find the path.
+2. Copy the provided code in `trainer_scripts/train.ipynb` to the Jupyter Notebook in Azure. Use *Python3.10-AzureML* as the kernel to run the code. Once the cell completes running, you should see a `h5` file being created.
+   - Note that you need to configure the path to training dataset. An example is given below:
+     ```py
+     dataset = Dataset.File.from_files(path=(ws.get_default_datastore(), 'UI/2025-04-05_231528_UTC/**'))
+     ```
+   - To find the correct path, click on Data tab on the left sidebar, and then the dataset you created in Blobstore. Click on View in datastores brows to find the path. Please leave `/**` as such and replace the prefix with your relative path.
 
 <img src="assets/data.png" width="800">
 
-4. Copy the provided code in `model_register.ipynb` to a new Jupyter Notebook in Azure. Use *Python3.10-SDK v2* as the kernel to run the code.
+3. **You can skip this step if you do not plan to host your ML model on Azure**. Copy the provided code in `model_register.ipynb` to a new Jupyter Notebook in Azure. Use *Python3.10-SDK v2* as the kernel to run the code.
    - Note that you need to configure the following code block in the 3rd cell accordingly:
 
-```
+```py
 SUBSCRIPTION = "<subscription_ID>"
 RESOURCE_GROUP = "<group_name>"
 WS_NAME = "<workspace_name>"
@@ -126,35 +111,122 @@ WS_NAME = "<workspace_name>"
 
 To find such information, click the tab on top right showing your subscription and workspace name. Copy Resource Group to `RESOURCE_GROUP`, Subscription ID to `SUBSCIPTION`, and Current workspace to `WS_NAME`.
 
-### 6. Microsoft Azure: Deploy Model via Web App
+Once the code is executed successfully, our trained model is registered in Azure Machine Learning and an online endpoint is created. To deploy our model, we need another script (`inference_scripts/score.py`) to define how the model handles incoming requests. The script is provided for your reference in the future. You will not need it in this lab since we will use a local server to mimic the process.
 
-1. Go to the homepage of Azure. In the left sidebar, search `App Service` and then creat new app.
-   - Choose Python as runtime
-   - Region should be picked the same as your ML workspace
-   - Use Free plan
+### 6. Deploy Model via a Web App
 
-<img src="assets/app.png" width="800">
+In general, we do not need to deploy a web app for ML inference. In fact, our model is ready for deployment, and we can direct incoming traffic to it for inference. However, when your client would like to have a front end for your ML model, a web app is then necessary. We will follow this approach for this lab, although the front end looks like a place holder whose main purpose now is to direct traffic.
 
-2. Click `+Create` to create a web app.
-   - Choose the same resource group, and name your web app.
-   - Choose Python3.10 as the runtime stack.
-   - Pick West US 2 as the region.
-   - Choose free F1 pricing plan.
-   - Click `Review+Create` and then `Create`. The deployment may take a few minutes.
-3. Create a **local** folder named `app` containing the model (.h5 file). Add the provided `app.py` and `requirements.txt` files to the folder.
-4. Push this folder to a GitHub repo, and copy the link of GitHub repo.
-5. Go to Azure App Service, and navigate to **Deployment Center**. Deploy the web app using GitHub. Paste the link of GitHub repo to the field of repository. Use main as the branch.
+Navigate to `app` directory. Activate a virtual environment and install the dependencies defined in `requirements.txt`. Then run `app.py` to start the server.
+
+```py
+python app.py
+```
+Once the web app starts, you should see an URL, which will be needed to perform inference on server.
+
+Optionally, you can deploy the web app using Microsoft Azure by navigating to `App Services`. Note that this option is subject to cost, especially when you need to host large ML models.
 
 ### 7. Cloud-Edge Offloading
 
-1. Complete the provided sketch template. Tune the confidence interval to control when ESP32 should consult to the cloud for gesture inference.
-2. Take a picture your serial monitor for cases when ESP32 performs inference locally, and when ESP32 consults cloud for inference.
+Based on the ESP32 sketch used during wand duel, you should modify it so that your wand performs inference locally when confidence is high, and redirects sensor readings to server when confidence is low.
 
-### 8. Clean Up Resources
+1. Change serverUrl to your web URL. At the top of your sketch, add the following threshold definition for confidence
+
+   ```cpp
+   #define CONFIDENCE_THRESHOLD 80.0
+   ```
+
+2. Complete the following code block and add it to your sketch at appropriate place:
+
+   ```cpp
+      if (confidence < CONFIDENCE_THRESHOLD) {
+            Serial.println("Low confidence - sending raw data to server...");
+            sendRawDataToServer();
+        } else {
+            // add your code to actuate LED based on 
+        }
+   ```
+
+3. Complete the function `sendRawDataToServer` so that your sensor reading is directed to the server and LED is actuated accordingly. You may use the `sendGestureToServer` function from wand duel as a starting point.
+
+   ```cpp
+   void sendRawDataToServer() {
+      HTTPClient http;
+      http.begin(serverUrl);
+      http.addHeader("Content-Type", "application/json");
+
+      // Build JSON array from features[]
+      // Your code here
+
+      int httpResponseCode = http.POST(jsonPayload);
+      Serial.print("HTTP Response code: ");
+      Serial.println(httpResponseCode);
+
+      if (httpResponseCode > 0) {
+         String response = http.getString();
+         Serial.println("Server response: " + response);
+
+         // Parse the JSON response
+         DynamicJsonDocument doc(256);
+         DeserializationError error = deserializeJson(doc, response);
+         if (!error) {
+               const char* gesture = doc["gesture"];
+               float confidence = doc["confidence"];
+
+               Serial.println("Server Inference Result:");
+               Serial.print("Gesture: ");
+               Serial.println(gesture);
+               Serial.print("Confidence: ");
+               Serial.print(confidence);
+               Serial.println("%");
+               // Your code to acutate LED
+         } else {
+               Serial.print("Failed to parse server response: ");
+               Serial.println(error.c_str());
+         }
+
+      } else {
+         Serial.printf("Error sending POST: %s\n", http.errorToString(httpResponseCode).c_str());
+      }
+
+      http.end();
+   }
+   ```
+
+4. Tune the confidence interval to control when ESP32 should consult to the cloud for gesture inference.
+5. Take a picture your serial monitor for cases when ESP32 performs inference locally, and when ESP32 consults cloud for inference.
+6. If your ESP32 keeps performing local inference with high confidence, you can collect one additional class of gestures and train the model in cloud. Then test your magic wand with the new gesture data, which should not be seen before by your wand.
+7. **Discussion**:
+   1. Is server's confidence always higher than wand's confidence from your observations? What is your hypothetical reason for the observation?
+   2. Sketch the data flow of this lab.
+   3. Our approach is edge-first, fallback-to-server when uncertain. Analyze pros and cons of this approach from the following aspects: reliance on connectivity, latency, prediction consistency, data privacy. 
+   4. Name a strategy to mitigate at least one limitation named in question 3.
+
+### 8. Clean Up Resources (**Important**)
 
 1. If you have completed this lab, and do not need the resources any more, you can go to resource groups from portal menu and delete resource group. This operation may take a few minutes to complete. Clean up resources will help to manage your bills incurred when using cloud services.
 
 ## Deliverables
 
-1. GitHub link to your project
+1. GitHub link to your project with detailed README. An example of project structure for your GitHub is given below:
+
+```
+.
+├── ESP32_to_cloud/             # ESP32 Arduino code
+│   └── ESP32_to_cloud.ino      # Main ESP32 sketch
+├── trainer_scripts             # Scripts
+    ├── train.ipynb                 # Model training script
+    ├── model_register.ipynb        # Model register script
+├── app/                        # Web app for model deployment
+    ├── wand_model.h5               # trained model
+    ├── app.py                      # Script of web app
+    ├── requirements.txt            # Dependencies required by web app
+└── data/                       # Training data directory
+    ├── O/                           # O-shape gesture samples
+    ├── V/                           # V-shape gesture samples
+    ├── Z/                           # Z-shape gesture samples
+    └── some_class/                  # Some other gesture samples
+```
+
 2. Pictures of serial monitor
+3. Report of all discussion questions
